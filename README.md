@@ -10,7 +10,7 @@ Review and familiarize yourself with the OpenShift documentation found here
 
 https://www.openshift.com/
 
-Log into the cloud.redhat.com portal - ensure that you have access to retrieve your OpenShift 4 cluster pull secret
+Log into the ```cloud.redhat.com``` portal - ensure that you have access to retrieve your OpenShift 4 cluster pull secret
 
 https://cloud.redhat.com/openshift/install
 
@@ -34,7 +34,7 @@ openshift-install version
 
 # STEP3:
 
-Generate and scaffold a install-config.yaml file
+Generate and scaffold a ```install-config.yaml``` file
 
 ```
 openshift-install create install-config
@@ -42,9 +42,9 @@ openshift-install create install-config
 
 # STEP4:
 
-Over write the install-config.yaml with a demo cluster config
+Over write the ```install-config.yaml``` with a demo cluster config
 Note: this is for demo purposes, and is configured as follows:
-1. a AZ SINGLE zone to keep running costs down
+1. SINGLE AZ zone configured to keep running costs down
 2. 3 x m4.xlarge cluster master nodes
 3. 1 x m4.xlarge compute node
 
@@ -54,11 +54,11 @@ Generate the SSH public key from an existing private key in your possession
 ssh-keygen -y -f ~/.ssh/OpenShiftUSEast1.pem
 ```
 
-copy the entire key string into the sshKey field within the install-config
+Copy the entire key string into the ```sshKey``` field within the ```install-config.yaml`` file
 
 Retrieve the pullSecret from the RedHat OpenShift cluster web portal:
  - https://cloud.redhat.com/openshift/install
- - copy this into the pullSecret field within the install-config
+ - copy this into the ```pullSecret``` field within the ```install-config.yaml``` file
 
 ```
 cat > install-config.yaml << EOF
@@ -127,16 +127,16 @@ Notes:
 # STEP5:
 
 Open the web console and login
-https://console-openshift-console.apps.openshift.democloudinc.com
-https://oauth-openshift.apps.openshift.democloudinc.com/oauth/token/display
+* https://console-openshift-console.apps.openshift.democloudinc.com
+* https://oauth-openshift.apps.openshift.democloudinc.com/oauth/token/display
 
 Notes:
-1. URL maybe different depending on the values used and configured within the install-config
+1. URL maybe different depending on the values used and configured within the ```install-config.yaml```
 2. The auth folder contains credentials for logging in
 
 # STEP6:
 
-Install the oc command:
+Install the ```oc``` command:
 
 ```
 curl -O https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/openshift-client-mac-4.2.4.tar.gz
@@ -170,13 +170,13 @@ oc get user
 
 Install and setup an IDP htpasswd file and import 
 
-Create a new users.htpasswd file
+Create a new ```users.htpasswd``` file
 
 ```
 htpasswd -c -B -b users.htpasswd jeremy blah
 ```
 
-Import users.htpasswd via the web console
+Import ```users.htpasswd``` via the web console
 
 Update the permissions on the new user - give cluster admin permissions
 
@@ -188,7 +188,7 @@ oc get user
 oc get scc
 ```
 
-Delete the temp kubeadmin user
+Delete the temp ```kubeadmin``` user
 
 ```
 oc delete secrets kubeadmin -n kube-system
@@ -201,7 +201,7 @@ You must be logged in as an administrator.
 
 # STEP9:
 
-Create the cloudacademy project/ns
+Create the ```cloudacademy``` project (namespace)
 
 ```
 oc new-project cloudacademy
@@ -224,7 +224,7 @@ EOF
 
 # STEP10:
 
-Create a new StorageClass named ebs
+Create a new StorageClass named ```ebs```
 
 ```
 cat <<EOF | oc create -f -
@@ -243,7 +243,7 @@ EOF
 
 # STEP11:
 
-Create a new Mongo StatefulSet
+Create a new Mongo StatefulSet name ```mongo```
 
 ```
 cat <<EOF | oc create -f -
@@ -314,7 +314,7 @@ oc get pod,pv,pvc
 
 # STEP12:
 
-Create a new Headless Service for Mongo 
+Create a new Headless Service for Mongo named ```mongo```
 
 ```
 cat <<EOF | oc create -f -
@@ -488,7 +488,7 @@ oc get svc
 oc get route
 ```
 
-Test the API route url - test the /ok, /languages, and /languages/{name} endpoints
+Test the API route url - test the ```/ok```, ```/languages```, and ```/languages/{name}``` endpoints
 
 ```
 curl -s http://API_ROUTE_URL/ok
@@ -527,14 +527,14 @@ Try out the S2I generator
 s2i create xyzbuilder s2i-xyzbuilder
 ```
 
-Examine the new s2i-xyzbuilder directory structure
+Examine the new ```s2i-xyzbuilder``` directory structure
 
 ```
 cd s2i-xyzbuilder
 tree s2i-xyzbuilder
 ```
 
-Examine the Makefile, Dockerfile, assemble, and run files
+Examine the ```Makefile```, ```Dockerfile```, ```assemble```, and ```run``` files
 
 ```
 cat Makefile
@@ -561,14 +561,14 @@ Git clone the example frontend builder S2I repo
 git clone https://github.com/cloudacademy/openshift-s2i-frontendbuilder.git
 ```
 
-Examine the new openshift-s2i-frontendbuilder directory structure
+Examine the new ```openshift-s2i-frontendbuilder``` directory structure
 
 ```
 cd openshift-s2i-frontendbuilder/
 tree
 ```
 
-Examine the Makefile, Dockerfile, assemble, and run files
+Examine the ```Makefile```, ```Dockerfile```, ```assemble```, and ```run``` files
 
 ```
 cat Dockerfile
@@ -583,7 +583,7 @@ Create the builder image
 make
 ```
 
-Examine the newly created docker image with tag cloudacademydevops/frontendbuilder
+Examine the newly created docker image with tag ```cloudacademydevops/frontendbuilder```
 
 ```
 docker images | grep cloudacademydevops/frontendbuilder
@@ -591,29 +591,29 @@ docker images | grep cloudacademydevops/frontendbuilder
 
 # STEP20:
 
-Create the runtime frontend image, referencing the GitHub hosted openshift-voteapp-frontend-react repo
+Create the runtime frontend image, referencing the GitHub hosted ```openshift-voteapp-frontend-react``` repo
 
 ```
 s2i build https://github.com/cloudacademy/openshift-voteapp-frontend-react cloudacademydevops/frontendbuilder cloudacademydevops/frontend:demo-v1
 ```
 
-Examine the docker images for the cloudacademydevops/frontend:demo-v1 image
+Examine the docker images for the ```cloudacademydevops/frontend:demo-v1``` image
 
 ```
 docker images | grep cloudacademydevops/frontend:demo-v1
 ```
 
-Test locally the runtime cloudacademydevops/frontend:demo-v1 docker image
+Test locally the runtime ```cloudacademydevops/frontend:demo-v1``` docker image
 
 ```
 docker run -e REACT_APP_APIHOSTPORT=xxxxxxxxxxxx -it --rm --name test -p 8080:8080 cloudacademydevops/frontend:demo-v1
 ```
 
-Browse to the application and ensure that the REACT_APP_APIHOSTPORT environment variable has been correctly injected and is being used for the AJAX calls to the API
+Browse to the application and ensure that the ```REACT_APP_APIHOSTPORT``` environment variable has been correctly injected and is being used for the AJAX calls to the API
 
 # STEP21:
 
-Upload the S2I Frontend builder image into the cloudacademydevops DockerHub repo
+Upload the S2I Frontend builder image into the ```cloudacademydevops``` DockerHub repo
 
 Note:
 1. Use your own DockerHub repo
@@ -713,8 +713,7 @@ oc logs -f build/BUILD_NAME
 
 Create a new frontend DeploymentConfig
 Notes: 
-1. Before deploying make sure the REACT_APP_APIHOSTPORT environment var is updated with the correct value
-(oc get route api)
+1. Before deploying make sure the ```REACT_APP_APIHOSTPORT``` environment var is updated with the correct value, use ```oc get route api``` to discover it
 
 ```
 cat <<EOF | oc apply -f -
@@ -833,7 +832,7 @@ oc route get frontend
 
 # STEP26:
 
-Tail the api pod logs
+Tail the API pod logs
 
 ```
 oc get pods
@@ -874,13 +873,13 @@ GitHub Webhook Setup Instructions:
 5. Disable SSL verification - during testing and demos
 6. Then click the "Add webhook" button at the bottom 
 
-Confirm that the webhook configuration as per the first request was successful 
+Confirm that the Webhook configuration has been successfully set
 
 # STEP28:
 
 Now perform an edit within the VoteApp codebase.
 
-For example update the VoteApp.js file - update the version number in the "CloudAcademy ❤ DevOps 2019 v2.10.1" string:
+For example update the VoteApp.js file - update the version number in the ```CloudAcademy ❤ DevOps 2019 v2.10.1``` string:
 
 ```
 openshift-voteapp-frontend-react/src/components/VoteApp.js
@@ -922,6 +921,12 @@ export default VoteApp;
 
 Save, commit, and push back into the repo
 
+```
+git add VoteApp.js
+git commit -m "updated to trigger a build"
+git push
+```
+
 # STEP29:
 
 Check that a new OpenShift build has been triggered
@@ -936,7 +941,7 @@ Tail the new build
 oc logs -f build/BUILD_NAME
 ```
 
-Watch for the new automatic deploymentconfig update triggered by the build
+Watch for the new automatic DeploymentConfig update triggered by the build
 
 ```
 oc rollout status deploymentconfig frontend
