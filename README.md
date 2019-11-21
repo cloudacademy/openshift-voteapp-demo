@@ -1,4 +1,6 @@
-OpenShift VoteApp Deployment Instructions
+# OpenShift VoteApp Deployment Instructions
+
+The following instructions are used to demonstrate how to provision an OpenShift 4 cluster on AWS, and then to deploy a cloud native application into it.
 
 ![OpenShiftDeployment](/docs/OpenShiftDeployment.png)
 
@@ -404,7 +406,7 @@ metadata:
     role: api
     env: demo
 spec:
-  replicas: 2
+  replicas: 4
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -740,7 +742,7 @@ spec:
           kind: ImageStreamTag
           namespace: cloudacademy
           name: frontend:latest
-  replicas: 2
+  replicas: 4
   selector:
     role: frontend
   template:
