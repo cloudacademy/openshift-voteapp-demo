@@ -69,7 +69,7 @@ Generate the SSH public key from an existing private key in your possession
 ssh-keygen -y -f ~/.ssh/OpenShiftUSEast1.pem
 ```
 
-Copy the entire key string into the ```sshKey``` field within the ```install-config.yaml`` file
+Copy the entire key string into the ```sshKey``` field within the ```install-config.yaml``` file
 
 Retrieve the pullSecret from the RedHat OpenShift cluster web portal:
  - https://cloud.redhat.com/openshift/install
@@ -135,7 +135,8 @@ Notes:
 1. Ensure to use the ```--log-level debug``` parameter to see the cluster provisioning activity - useful to detect errors and abort early
 2. The ```openshift-install``` command internally uses [Terraform](https://www.terraform.io/) to perform the actual AWS resource provisioning. Read the [Terraform](https://www.terraform.io/docs/providers/aws/index.html#authentication) documentation to determine how to establish AWS credentials so that Terraform can authenticate into your AWS account
 3. This takes between **10-20 minutes** to complete so sit back and relax, its major chill time :+1:
-
+4. Ensure that you run the ```openshift-install``` command in the same dir containing the ```install-config.yaml``` file
+5. Running the ```openshift-install``` command will result in additional AWS expenditure
 
 ```
 openshift-install create cluster --log-level debug
@@ -975,3 +976,11 @@ refreshing the application within the browser!!
 Result!!
 
 :metal: 
+
+# STEP30
+
+When you've finished with the OpenShift cluster and no longer need it, consider tearing it down:
+
+```
+openshift-install destroy cluster
+```
