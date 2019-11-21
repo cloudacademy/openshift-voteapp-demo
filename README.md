@@ -121,10 +121,14 @@ openshift-install create cluster --log-level debug
 ```
 
 Notes:
-1. This takes between 10-20 minutes to complete so sit back and relax, its major chill time :+1+
-2. Use the "--log-level debug" to see the provisioning activity - useful to detect errors earlier
+1. Ensure to use the ```--log-level debug``` parameter to see the cluster provisioning activity - useful to detect errors and abort early
+2. This takes between **10-20 minutes** to complete so sit back and relax, its major chill time :+1:
 
 # STEP5:
+
+Congrats!! 
+You've just baked yourself a fresh OpenShift 4 cluster!!
+:metal: :metal:
 
 Open the web console and login
 * https://console-openshift-console.apps.openshift.democloudinc.com
