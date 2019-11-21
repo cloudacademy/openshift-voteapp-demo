@@ -2,6 +2,23 @@
 
 The following instructions are used to demonstrate how to provision an OpenShift 4 cluster on AWS, and then to deploy a cloud native application into it.
 
+Along the way, you'll get to see how to work with the following OpenShift cluster resources:
+* Pods
+* ReplicaSets
+* Deployments
+* DeploymentConfigs
+* Services
+* StatefulSets
+* PersistentVolumes
+* PersistentVolumeClaims
+* BuildConfigs
+* Builds
+* ImageStreams
+
+Will also show you how to work with OpenShift's S2I (source-to-image) build technology.
+
+Alright lets roll...
+
 ![OpenShiftDeployment](/docs/OpenShiftDeployment.png)
 
 # STEP1:
