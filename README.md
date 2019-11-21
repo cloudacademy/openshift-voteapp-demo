@@ -1,5 +1,7 @@
 OpenShift VoteApp Deployment Instructions
 
+![OpenShiftDeployment](/docs/OpenShiftDeployment.png)
+
 # STEP1:
 
 https://www.openshift.com/
