@@ -131,13 +131,16 @@ EOF
 
 Create the cluster
 
+Notes:
+1. Ensure to use the ```--log-level debug``` parameter to see the cluster provisioning activity - useful to detect errors and abort early
+2. The ```openshift-install``` command internally uses **Terraform** to perform the actual AWS resource provisioning. Read the [Terraform](https://www.terraform.io/docs/providers/aws/index.html#authentication) documentation to determine how to establish AWS credentials so that **Terraform** can authenticate into your AWS account
+3. This takes between **10-20 minutes** to complete so sit back and relax, its major chill time :+1:
+
+
 ```
 openshift-install create cluster --log-level debug
 ```
 
-Notes:
-1. Ensure to use the ```--log-level debug``` parameter to see the cluster provisioning activity - useful to detect errors and abort early
-2. This takes between **10-20 minutes** to complete so sit back and relax, its major chill time :+1:
 
 # STEP5:
 
