@@ -49,7 +49,7 @@ openshift-install version
 
 # STEP3:
 
-Generate and scaffold a ```install-config.yaml``` file
+Generate and scaffold a new ```install-config.yaml``` file
 
 ```
 openshift-install create install-config
@@ -150,7 +150,7 @@ Open the web console and login
 
 Notes:
 1. URL maybe different depending on the values used and configured within the ```install-config.yaml```
-2. The auth folder contains credentials for logging in
+2. The ```auth``` folder contains credentials for logging in
 
 # STEP6:
 
