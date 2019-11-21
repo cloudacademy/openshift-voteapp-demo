@@ -1,12 +1,10 @@
-# openshift-voteapp-demo
-=================================
+OpenShift VoteApp Deployment Instructions
 
 # STEP1:
 
 https://www.openshift.com/
-https://cloud.redhat.com/openshift/install
 
-=================================
+https://cloud.redhat.com/openshift/install
 
 # STEP2:
 
@@ -26,8 +24,6 @@ openshift-install
 openshift-install version
 ```
 
-=================================
-
 # STEP3:
 
 Generate and scaffold a install-config.yaml file
@@ -35,8 +31,6 @@ Generate and scaffold a install-config.yaml file
 ```
 openshift-install create install-config
 ```
-
-=================================
 
 # STEP4:
 
@@ -122,8 +116,6 @@ Notes:
 1. This takes between 10-20 minutes to complete so go make a coffee!!
 2. Use the "--log-level debug" to see the provisioning activity - useful to detect errors earlier
 
-=================================
-
 # STEP5:
 
 Open the web console and login
@@ -133,8 +125,6 @@ https://oauth-openshift.apps.openshift.democloudinc.com/oauth/token/display
 Notes:
 1. URL maybe different depending on the values used and configured within the install-config
 2. The auth folder contains credentials for logging in
-
-=================================
 
 # STEP6:
 
@@ -158,8 +148,6 @@ Alternatively for MacOS use
 brew install openshift-cli
 ```
 
-=================================
-
 # STEP7:
 
 Test the client cluster authencation
@@ -169,8 +157,6 @@ oc whoami
 oc whoami -t
 oc get user
 ```
-
-=================================
 
 # STEP8:
 
@@ -205,8 +191,6 @@ You must have configured at least one identity provider.
 You must have added the cluster-admin role to a user.
 You must be logged in as an administrator.
 
-=================================
-
 # STEP9:
 
 Create the cloudacademy project/ns
@@ -230,8 +214,6 @@ metadata:
 EOF
 ```
 
-=================================
-
 # STEP10:
 
 Create a new StorageClass named ebs
@@ -250,8 +232,6 @@ reclaimPolicy: Retain
 volumeBindingMode: Immediate
 EOF
 ```
-
-=================================
 
 # STEP11:
 
@@ -324,8 +304,6 @@ Examine the Mongo Pods, PersistentVols, and PersistentVolumeClaims
 oc get pod,pv,pvc
 ```
 
-=================================
-
 # STEP12:
 
 Create a new Headless Service for Mongo 
@@ -369,8 +347,6 @@ host mongo
 for i in {0..2}; do host mongo-$i.mongo; done
 ```
 
-=================================
-
 # STEP13:
 
 Initialise the Mongo database replica set
@@ -392,8 +368,6 @@ oc rsh mongo-0 mongo < db.init.js
 oc rsh mongo-0 mongo --eval "rs.status()"
 ```
 
-=================================
-
 # STEP14:
 
 Load the initial voting app data into the Mongo database
@@ -412,8 +386,6 @@ EOF
 oc rsh mongo-0 mongo < db.load.js
 oc rsh mongo-0 mongo langdb --eval "db.languages.find().pretty()"
 ```
-
-=================================
 
 # STEP15:
 
@@ -494,8 +466,6 @@ spec:
 EOF
 ```
 
-=================================
-
 # STEP16:
 
 Examine the status of the API deployment
@@ -519,8 +489,6 @@ curl -s http://API_ROUTE_URL/languages/go | jq .
 curl -s http://API_ROUTE_URL/languages/java | jq .
 curl -s http://API_ROUTE_URL/languages/nodejs | jq .
 ```
-
-=================================
 
 # STEP17:
 
@@ -577,8 +545,6 @@ Examine the newly created docker image
 docker images | grep xyzbuilder
 ```
 
-=============================
-
 # STEP19:
 
 Git clone the example frontend builder S2I repo
@@ -615,8 +581,6 @@ Examine the newly created docker image with tag cloudacademydevops/frontendbuild
 docker images | grep cloudacademydevops/frontendbuilder
 ```
 
-=============================
-
 # STEP20:
 
 Create the runtime frontend image, referencing the GitHub hosted openshift-voteapp-frontend-react repo
@@ -639,8 +603,6 @@ docker run -e REACT_APP_APIHOSTPORT=xxxxxxxxxxxx -it --rm --name test -p 8080:80
 
 Browse to the application and ensure that the REACT_APP_APIHOSTPORT environment variable has been correctly injected and is being used for the AJAX calls to the API
 
-=================================
-
 # STEP21:
 
 Upload the S2I Frontend builder image into the cloudacademydevops DockerHub repo
@@ -658,8 +620,6 @@ Now import it from DockerHub into the OpenShift cluster
 ```
 oc import-image docker.io/cloudacademydevops/frontendbuilder:latest --confirm -n cloudacademy
 ```
-
-=================================
 
 # STEP22:
 
@@ -712,8 +672,6 @@ Examine current build configs
 oc get bc
 ```
 
-=================================
-
 # STEP23:
 
 Create a new ImageStream named frontend - this will be populated with frontend images created by the frontend buildconfig
@@ -727,8 +685,6 @@ Examine all current image storageClassName
 ```
 oc get is
 ```
-
-=================================
 
 # STEP24:
 
@@ -744,8 +700,6 @@ or
 oc get builds
 oc logs -f build/BUILD_NAME
 ```
-
-=================================
 
 # STEP25:
 
@@ -869,8 +823,6 @@ Use the chrome browser and test the application via the frontend route url
 oc route get frontend
 ```
 
-=================================
-
 # STEP26:
 
 Tail the api pod logs
@@ -886,8 +838,6 @@ Check the updated vote count held within the Mongo database
 oc get pods
 oc rsh mongo-0 mongo langdb --eval "db.languages.find().pretty()"
 ```
-
-=================================
 
 # STEP27:
 
@@ -917,8 +867,6 @@ GitHub Webhook Setup Instructions:
 6. Then click the "Add webhook" button at the bottom 
 
 Confirm that the webhook configuration as per the first request was successful 
-
-=================================
 
 # STEP28:
 
@@ -965,8 +913,6 @@ export default VoteApp;
 ```
 
 Save, commit, and push back into the repo
-
-=================================
 
 # STEP29:
 
