@@ -885,7 +885,7 @@ Will look something like the following:
 https://api.openshift.democloudinc.com:6443/apis/build.openshift.io/v1/namespaces/blah/buildconfigs/frontend/webhooks/supersecretgoeshere/github
 ```
 
-Login into the GitHub repo: https://github.com/cloudacademy/openshift-voteapp-frontend-react
+Within the ```openshift-voteapp-frontend-react``` Github repo - that you forked earlier (step 22.1), perform the following steps to configure a Webhook that will trigger an OpenShift build:
 
 GitHub Webhook Setup Instructions:
 1. Under Settings->Webhooks, click the "Add Webhook" button
