@@ -17,8 +17,6 @@ Along the way, you'll get to see how to work with the following OpenShift cluste
 
 Will also show you how to work with OpenShift's S2I (source-to-image) build technology.
 
-Alright lets roll...
-
 ![OpenShiftDeployment](/docs/OpenShiftDeployment.png)
 
 # STEP1:
