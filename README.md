@@ -16,7 +16,7 @@ https://cloud.redhat.com/openshift/install
 
 # STEP2:
 
-Download the *openshift-install* installer and setup
+Download the ```openshift-install``` installer and setup
 
 https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/
 
