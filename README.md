@@ -15,7 +15,7 @@ Along the way, you'll get to see how to work with the following OpenShift cluste
 * Builds
 * ImageStreams
 
-Will also show you how to work with OpenShift's S2I (source-to-image) build technology.
+We'll also show you how to work with OpenShift's [S2I](https://github.com/openshift/source-to-image) (Source-to-Image) build technology.
 
 ![OpenShiftDeployment](/docs/OpenShiftDeployment.png)
 
