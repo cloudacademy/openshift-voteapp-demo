@@ -6,13 +6,17 @@ The following instructions are used to demonstrate how to provision an OpenShift
 
 # STEP1:
 
+Review and familiarize yourself with the OpenShift documentation found here
+
 https://www.openshift.com/
+
+Log into the cloud.redhat.com portal - ensure that you have access to retrieve your OpenShift 4 cluster pull secret
 
 https://cloud.redhat.com/openshift/install
 
 # STEP2:
 
-Download the openshift-install installer and setup
+Download the *openshift-install* installer and setup
 
 https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/
 
