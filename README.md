@@ -128,7 +128,6 @@ Notes:
 
 Congrats!! 
 You've just baked yourself a fresh OpenShift 4 cluster!!
-:metal: :metal:
 
 Open the web console and login
 * https://console-openshift-console.apps.openshift.democloudinc.com
@@ -955,4 +954,6 @@ oc get pods
 Confirm the complete end-to-end build and deploy process has worked by 
 refreshing the application within the browser!!
 
-:+1: Result!!
+Result!!
+
+:metal: 
