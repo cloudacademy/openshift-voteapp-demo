@@ -201,7 +201,7 @@ Install and setup an IDP htpasswd file and import
 Create a new ```users.htpasswd``` file
 
 ```
-htpasswd -c -B -b users.htpasswd jeremy blah
+htpasswd -c -B -b users.htpasswd devuser1 blah
 ```
 
 Import ```users.htpasswd``` via the web console
@@ -209,8 +209,8 @@ Import ```users.htpasswd``` via the web console
 Update the permissions on the new user - give cluster admin permissions
 
 ```
-oc adm policy add-cluster-role-to-user cluster-admin jeremy
-oc login -u jeremy -p blah
+oc adm policy add-cluster-role-to-user cluster-admin devuser1
+oc login -u devuser1 -p blah
 oc whoami
 oc get user
 oc get scc
