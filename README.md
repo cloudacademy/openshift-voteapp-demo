@@ -185,6 +185,10 @@ brew install openshift-cli
 Test the client cluster authencation
 
 ```
+export KUBECONFIG=$(pwd)/auth/kubeconfig
+```
+
+```
 oc whoami
 oc whoami -t
 oc get user
