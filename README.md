@@ -202,6 +202,7 @@ Create a new ```users.htpasswd``` file
 
 ```
 htpasswd -c -B -b users.htpasswd devuser1 blah
+cat users.htpasswd
 ```
 
 Import ```users.htpasswd``` via the web console
