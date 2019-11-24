@@ -270,6 +270,12 @@ volumeBindingMode: Immediate
 EOF
 ```
 
+Examine each StorageClass
+
+```
+oc get storageclass
+```
+
 # STEP11:
 
 Create a new Mongo StatefulSet name ```mongo```
@@ -335,7 +341,18 @@ spec:
 EOF
 ```
 
-Examine the Mongo Pods, PersistentVols, and PersistentVolumeClaims
+Examine the Mongo Pods launch in an ordered sequence
+
+```
+oc get pods --watch
+oc get pods
+oc get pods --show-labels
+oc get pods -l role=db
+```
+
+Note: **Ctrl-C** to exit the watch
+
+Examine the Persistent Volumes and Persistent Volume Claims
 
 ```
 oc get pod,pv,pvc
@@ -382,6 +399,7 @@ Within the new utils container run the following DNS queries
 ```
 host mongo
 for i in {0..2}; do host mongo-$i.mongo; done
+exit
 ```
 
 # STEP13:
@@ -512,6 +530,7 @@ Examine api pod log to see mongo db connected message
 ```
 oc rollout status deployment api
 oc get pods
+oc get pods -l role=api
 oc logs API_POD_NAME_HERE
 oc get svc
 oc get route
@@ -559,22 +578,24 @@ s2i create xyzbuilder s2i-xyzbuilder
 Examine the new ```s2i-xyzbuilder``` directory structure
 
 ```
-cd s2i-xyzbuilder
 tree s2i-xyzbuilder
 ```
 
 Examine the ```Makefile```, ```Dockerfile```, ```assemble```, and ```run``` files
 
 ```
-cat Makefile
-cat Dockerfile
-cat s2i/bin/assemble
-cat s2i/bin/run
+cat ./s2i-xyzbuilder/Makefile
+cat ./s2i-xyzbuilder/Dockerfile
+cat ./s2i-xyzbuilder/s2i/bin/assemble
+cat ./s2i-xyzbuilder/s2i/bin/run
 ```
 
-Create the builder image
+Create the S2I builder image
+Note: You will need to have a docker daemon configured and available before running the ```make``` command. Consider setting the ```DOCKER_HOST``` environment variable
 
-make
+```
+(cd ./s2i-xyzbuilder && make)
+```
 
 Examine the newly created docker image
 
@@ -600,10 +621,10 @@ tree
 Examine the ```Makefile```, ```Dockerfile```, ```assemble```, and ```run``` files
 
 ```
+cat Makefile
 cat Dockerfile
 cat s2i/bin/assemble
 cat s2i/bin/run
-cat Makefile
 ```
 
 Create the builder image
@@ -620,7 +641,7 @@ docker images | grep cloudacademydevops/frontendbuilder
 
 # STEP20:
 
-Create the runtime frontend image, referencing the GitHub hosted ```openshift-voteapp-frontend-react``` repo
+Build the runtime frontend container image, injecting the GitHub hosted [openshift-voteapp-frontend-react](https://github.com/cloudacademy/openshift-voteapp-frontend-react) source code for the React based web frontend repo into the builder image
 
 ```
 s2i build https://github.com/cloudacademy/openshift-voteapp-frontend-react cloudacademydevops/frontendbuilder cloudacademydevops/frontend:demo-v1
@@ -629,7 +650,7 @@ s2i build https://github.com/cloudacademy/openshift-voteapp-frontend-react cloud
 Examine the docker images for the ```cloudacademydevops/frontend:demo-v1``` image
 
 ```
-docker images | grep cloudacademydevops/frontend:demo-v1
+docker images | grep cloudacademydevops/frontend | grep demo-v1
 ```
 
 Test locally the runtime ```cloudacademydevops/frontend:demo-v1``` docker image
@@ -645,7 +666,7 @@ Browse to the application and ensure that the ```REACT_APP_APIHOSTPORT``` enviro
 Upload the S2I Frontend builder image into the ```cloudacademydevops``` DockerHub repo
 
 Note:
-1. Use your own DockerHub repo
+1. Consider using your own DockerHub repo
 
 ```
 docker login
@@ -658,13 +679,20 @@ Now import it from DockerHub into the OpenShift cluster
 oc import-image docker.io/cloudacademydevops/frontendbuilder:latest --confirm -n cloudacademy
 ```
 
+Examine the current ImageStreams
+
+```
+oc get imagestreams
+oc describe is frontendbuilder
+```
+
 # STEP22:
 
 Create a new BuildConfig for the frontend
 
 Note:
 1. Consider forking the GitHub repo: https://github.com/cloudacademy/openshift-voteapp-frontend-react
-2. Then update the gti url field with your forked GitHub URL
+2. Then update the ```source/git/uri``` field in the following BuildConfig resource with your forked GitHub URL
 3. Update the secret value - use your own secret
 
 ```
@@ -703,10 +731,11 @@ spec:
 EOF
 ```
 
-Examine current build configs
+Examine current BuildConfigs
 
 ```
-oc get bc
+oc get buildconfig
+oc describe buildconfig frontend
 ```
 
 # STEP23:
@@ -735,14 +764,23 @@ or
 
 ```
 oc get builds
-oc logs -f build/BUILD_NAME
+oc logs -f build/BUILD_NAME --tail=50
 ```
 
 # STEP25:
 
 Create a new frontend DeploymentConfig
 Notes: 
-1. Before deploying make sure the ```REACT_APP_APIHOSTPORT``` environment var is updated with the correct value, use ```oc get route api``` to discover it
+1. Before deploying the actual DeploymentConfig, we make a call to ```oc get route api``` to determine the HOST/PORT location for the API external service to which AJAX calls initiated from the browser will be directed at. The value is captured in the ```APIHOST``` variable and then this is injected into the DeploymentConfig ```REACT_APP_APIHOSTPORT``` environment var just before it is created within the cluster
+
+```
+oc get route api
+```
+
+```
+APIHOST=$(oc get route api -o jsonpath='{.spec.host}')
+echo $APIHOST
+```
 
 ```
 cat <<EOF | oc apply -f -
@@ -808,7 +846,7 @@ spec:
             failureThreshold: 3
           env:
             - name: REACT_APP_APIHOSTPORT
-              value: api-cloudacademy.apps.openshift.democloudinc.com
+              value: $APIHOST
           ports:
             - containerPort: 8080
               protocol: TCP
