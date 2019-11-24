@@ -190,8 +190,8 @@ export KUBECONFIG=$(pwd)/auth/kubeconfig
 
 ```
 oc whoami
-oc whoami -t
-oc get user
+oc whoami --show-context=true
+oc whoami --show-server=true
 ```
 
 # STEP8:
