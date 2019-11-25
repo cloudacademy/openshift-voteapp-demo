@@ -523,11 +523,9 @@ spec:
 EOF
 ```
 
-# STEP16:
-
-Examine the status of the API deployment
-Examine the pods to confirm that they are up and running
-Examine api pod log to see mongo db connected message
+- Examine the status of the API deployment
+- Examine the pods to confirm that they are up and running
+- Examine the API pod log to see that it has successfully connected to the MongoDB replicaset
 
 ```
 oc rollout status deployment api
@@ -537,6 +535,8 @@ oc logs API_POD_NAME_HERE
 oc get svc
 oc get route
 ```
+
+# STEP16:
 
 Test the API route url - test the ```/ok```, ```/languages```, and ```/languages/{name}``` endpoints
 
