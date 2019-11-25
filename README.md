@@ -1,6 +1,8 @@
 # OpenShift VoteApp Deployment Instructions
 
-The following instructions are used to demonstrate how to provision an OpenShift 4 cluster on AWS, and then to deploy a cloud native application into it.
+The following instructions are used to demonstrate how to provision an OpenShift 4 cluster on AWS, and then to deploy a cloud native application into it, complete with automated container builds and deployments for the win!
+
+:metal: 
 
 The cloud native application is architected using microservices and is presented to the user as a web application. The application frontend provides the end-user with the ability to vote on one of 3 programming languages: Go, Java, and/or NodeJS. Voting results in AJAX calls being made from the browser to an API which in turn then saves the results into a MongoDB database.
 
