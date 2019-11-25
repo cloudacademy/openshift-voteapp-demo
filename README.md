@@ -1,8 +1,12 @@
 # OpenShift VoteApp Deployment Instructions
 
-The following instructions are used to demonstrate how to provision an OpenShift 4 cluster on AWS, and then to deploy a cloud native application into it.
+The following instructions are used to demonstrate how to provision an OpenShift 4 cluster on AWS, and then to deploy a cloud native application into it, complete with automated container builds and deployments for the win!
+
+:metal: 
 
 The cloud native application is architected using microservices and is presented to the user as a web application. The application frontend provides the end-user with the ability to vote on one of 3 programming languages: Go, Java, and/or NodeJS. Voting results in AJAX calls being made from the browser to an API which in turn then saves the results into a MongoDB database.
+
+![VoteApp](/docs/voteapp.png)
 
 Along the way, you'll get to see how to work with the following OpenShift cluster resources:
 * Pods
@@ -59,9 +63,10 @@ openshift-install create install-config
 
 # STEP4:
 
-Over write the ```install-config.yaml``` with a demo cluster config
-Note: this is for demo purposes, and is configured as follows:
-1. SINGLE AZ zone configured to keep running costs down
+Consider customising the generated ```install-config.yaml``` file by overwriting it with the following demo focused cluster config
+
+Note: the following cluster config is designed for demo purposes, motivated primarily by reducing running costs
+1. SINGLE AZ zone
 2. 3 x m4.xlarge cluster master nodes
 3. 1 x m4.xlarge compute node
 
@@ -136,9 +141,10 @@ Create the cluster
 Notes:
 1. Ensure to use the ```--log-level debug``` parameter to see the cluster provisioning activity - useful to detect errors and abort early
 2. The ```openshift-install``` command internally uses [Terraform](https://www.terraform.io/) to perform the actual AWS resource provisioning. Read the [Terraform](https://www.terraform.io/docs/providers/aws/index.html#authentication) documentation to determine how to establish AWS credentials so that Terraform can authenticate into your AWS account
-3. This takes between **10-20 minutes** to complete so sit back and relax, its major chill time :+1:
+3. This takes between **20-30 minutes** to complete so sit back and relax, its major chill time :+1:
 4. Ensure that you run the ```openshift-install``` command in the same dir containing the ```install-config.yaml``` file
 5. Running the ```openshift-install``` command will result in additional AWS expenditure
+6. Make a copy of the ```install-config.yaml``` file if you want to preserve it *BEFORE* you execute the ```openshift-install create cluster``` - as it will be deleted during the cluster creation process
 
 ```
 openshift-install create cluster --log-level debug
@@ -521,11 +527,9 @@ spec:
 EOF
 ```
 
-# STEP16:
-
-Examine the status of the API deployment
-Examine the pods to confirm that they are up and running
-Examine api pod log to see mongo db connected message
+- Examine the status of the API deployment
+- Examine the pods to confirm that they are up and running
+- Examine the API pod log to see that it has successfully connected to the MongoDB replicaset
 
 ```
 oc rollout status deployment api
@@ -536,14 +540,26 @@ oc get svc
 oc get route
 ```
 
+# STEP16:
+
 Test the API route url - test the ```/ok```, ```/languages```, and ```/languages/{name}``` endpoints
 
 ```
-curl -s http://API_ROUTE_URL/ok
-curl -s http://API_ROUTE_URL/languages | jq .
-curl -s http://API_ROUTE_URL/languages/go | jq .
-curl -s http://API_ROUTE_URL/languages/java | jq .
-curl -s http://API_ROUTE_URL/languages/nodejs | jq .
+APIHOST=$(oc get route api -o jsonpath='{.spec.host}')
+echo $APIHOST
+```
+
+```
+curl -s $APIHOST/ok
+```
+
+Note: The following commands leverage the [jq](https://stedolan.github.io/jq/) utility to format the json data responses
+
+```
+curl -s $APIHOST/languages | jq .
+curl -s $APIHOST/languages/go | jq .
+curl -s $APIHOST/languages/java | jq .
+curl -s $APIHOST/languages/nodejs | jq .
 ```
 
 # STEP17:
@@ -564,8 +580,6 @@ Alternatively for MacOS use
 ```
 brew install source-to-image
 ```
-
-=============================
 
 # STEP18:
 
@@ -591,6 +605,7 @@ cat ./s2i-xyzbuilder/s2i/bin/run
 ```
 
 Create the S2I builder image
+
 Note: You will need to have a docker daemon configured and available before running the ```make``` command. Consider setting the ```DOCKER_HOST``` environment variable
 
 ```
@@ -770,8 +785,10 @@ oc logs -f build/BUILD_NAME --tail=50
 # STEP25:
 
 Create a new frontend DeploymentConfig
+
 Notes: 
-1. Before deploying the actual DeploymentConfig, we make a call to ```oc get route api``` to determine the HOST/PORT location for the API external service to which AJAX calls initiated from the browser will be directed at. The value is captured in the ```APIHOST``` variable and then this is injected into the DeploymentConfig ```REACT_APP_APIHOSTPORT``` environment var just before it is created within the cluster
+1. Before deploying the actual DeploymentConfig, we make a call to ```oc get route api``` to determine the HOST/PORT location for the API external service to which AJAX calls initiated from the browser will be directed at. 
+2. The value is captured in the ```APIHOST``` variable and then this is injected into the DeploymentConfig ```REACT_APP_APIHOSTPORT``` environment var just before it is created within the cluster
 
 ```
 oc get route api
@@ -909,11 +926,13 @@ curl -s -i $FRONTENDHOST
 ```
 
 Now test the full end-to-end application using the Chrome browser...
+
 Note: Use the Developer Tools within the Chrome browser to record, filter, and observe the AJAX traffic (XHR) which is generated when any of the +1 vote buttons are clicked.
 
 # STEP26:
 
 Tail the Frontend and/or API pod logs
+
 Note: Incoming traffic to the pods are load balanced using a round-robin strategy - so when tailing the logs remember that incoming requests are evenly distrubuted over all of the pods grouped by the **role** label 
 
 ```
@@ -941,6 +960,7 @@ oc describe bc frontend
 ```
 
 Copy the Github webhook url, this can also be found and copied from within the Openshift web admin console
+
 Note: the Github webhook url has the secret blanked out - you will need to manually edit it back into the url - it needs to be the same value as used within the BuildConfig created in step 22. Alternatively you can copy it from the OpenShift web admin console within the Builds/Build Configs/frontend section
 
 The full Github URL should look something similar to the following:
