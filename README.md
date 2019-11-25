@@ -63,10 +63,10 @@ openshift-install create install-config
 
 # STEP4:
 
-Over write the ```install-config.yaml``` with a demo cluster config
+Consider customising the generated ```install-config.yaml``` file by overwriting it with the following demo focused cluster config
 
-Note: this is for demo purposes, and is configured as follows:
-1. SINGLE AZ zone configured to keep running costs down
+Note: the following cluster config is designed for demo purposes, motivated primarily by reducing running costs
+1. SINGLE AZ zone
 2. 3 x m4.xlarge cluster master nodes
 3. 1 x m4.xlarge compute node
 
