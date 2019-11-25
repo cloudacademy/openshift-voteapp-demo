@@ -62,6 +62,7 @@ openshift-install create install-config
 # STEP4:
 
 Over write the ```install-config.yaml``` with a demo cluster config
+
 Note: this is for demo purposes, and is configured as follows:
 1. SINGLE AZ zone configured to keep running costs down
 2. 3 x m4.xlarge cluster master nodes
@@ -601,6 +602,7 @@ cat ./s2i-xyzbuilder/s2i/bin/run
 ```
 
 Create the S2I builder image
+
 Note: You will need to have a docker daemon configured and available before running the ```make``` command. Consider setting the ```DOCKER_HOST``` environment variable
 
 ```
@@ -780,8 +782,10 @@ oc logs -f build/BUILD_NAME --tail=50
 # STEP25:
 
 Create a new frontend DeploymentConfig
+
 Notes: 
-1. Before deploying the actual DeploymentConfig, we make a call to ```oc get route api``` to determine the HOST/PORT location for the API external service to which AJAX calls initiated from the browser will be directed at. The value is captured in the ```APIHOST``` variable and then this is injected into the DeploymentConfig ```REACT_APP_APIHOSTPORT``` environment var just before it is created within the cluster
+1. Before deploying the actual DeploymentConfig, we make a call to ```oc get route api``` to determine the HOST/PORT location for the API external service to which AJAX calls initiated from the browser will be directed at. 
+2. The value is captured in the ```APIHOST``` variable and then this is injected into the DeploymentConfig ```REACT_APP_APIHOSTPORT``` environment var just before it is created within the cluster
 
 ```
 oc get route api
@@ -919,11 +923,13 @@ curl -s -i $FRONTENDHOST
 ```
 
 Now test the full end-to-end application using the Chrome browser...
+
 Note: Use the Developer Tools within the Chrome browser to record, filter, and observe the AJAX traffic (XHR) which is generated when any of the +1 vote buttons are clicked.
 
 # STEP26:
 
 Tail the Frontend and/or API pod logs
+
 Note: Incoming traffic to the pods are load balanced using a round-robin strategy - so when tailing the logs remember that incoming requests are evenly distrubuted over all of the pods grouped by the **role** label 
 
 ```
@@ -951,6 +957,7 @@ oc describe bc frontend
 ```
 
 Copy the Github webhook url, this can also be found and copied from within the Openshift web admin console
+
 Note: the Github webhook url has the secret blanked out - you will need to manually edit it back into the url - it needs to be the same value as used within the BuildConfig created in step 22. Alternatively you can copy it from the OpenShift web admin console within the Builds/Build Configs/frontend section
 
 The full Github URL should look something similar to the following:
