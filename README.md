@@ -577,8 +577,6 @@ Alternatively for MacOS use
 brew install source-to-image
 ```
 
-=============================
-
 # STEP18:
 
 Try out the S2I generator
