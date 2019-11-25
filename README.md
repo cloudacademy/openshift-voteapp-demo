@@ -27,9 +27,9 @@ Review and familiarize yourself with the OpenShift documentation found here
 
 https://www.openshift.com/
 
-Log into the ```cloud.redhat.com``` portal - ensure that you have access to retrieve your OpenShift 4 cluster pull secret
+Log into the [cloud.redhat.com](https://cloud.redhat.com/openshift/install) portal - ensure that you have access to retrieve your OpenShift 4 cluster pull secret
 
-https://cloud.redhat.com/openshift/install
+Note: Read and review the terms and conditions associated with spinning up an OpenShift Container Platform 4 cluster
 
 # STEP2:
 
@@ -889,20 +889,37 @@ Examine the rollout of the DeploymentConfig
 ```
 oc rollout status deploymentconfig frontend
 oc get pods
+oc get pods -l role=frontend
 ```
 
-Use the chrome browser and test the application via the frontend route url
+Use the ```curl``` command to test the application via the frontend route url
 
 ```
-oc route get frontend
+oc get route frontend
 ```
+
+```
+FRONTENDHOST=$(oc get route frontend -o jsonpath='{.spec.host}')
+echo $FRONTENDHOST
+```
+
+```
+curl -s -I $FRONTENDHOST
+curl -s -i $FRONTENDHOST
+```
+
+Now test the full end-to-end application using the Chrome browser...
+Note: Use the Developer Tools within the Chrome browser to record, filter, and observe the AJAX traffic (XHR) which is generated when any of the +1 vote buttons are clicked.
 
 # STEP26:
 
-Tail the API pod logs
+Tail the Frontend and/or API pod logs
+Note: Incoming traffic to the pods are load balanced using a round-robin strategy - so when tailing the logs remember that incoming requests are evenly distrubuted over all of the pods grouped by the **role** label 
 
 ```
 oc get pods
+oc get pods --field-selector=status.phase=Running
+oc logs FRONTEND_POD_NAME --tail 50 --follow
 oc logs API_POD_NAME --tail 50 --follow
 ```
 
@@ -910,6 +927,7 @@ Check the updated vote count held within the Mongo database
 
 ```
 oc get pods
+oc get pods -l role=db
 oc rsh mongo-0 mongo langdb --eval "db.languages.find().pretty()"
 ```
 
@@ -923,14 +941,15 @@ oc describe bc frontend
 ```
 
 Copy the Github webhook url, this can also be found and copied from within the Openshift web admin console
+Note: the Github webhook url has the secret blanked out - you will need to manually edit it back into the url - it needs to be the same value as used within the BuildConfig created in step 22. Alternatively you can copy it from the OpenShift web admin console within the Builds/Build Configs/frontend section
 
-Will look something like the following:
+The full Github URL should look something similar to the following:
 
 ```
 https://api.openshift.democloudinc.com:6443/apis/build.openshift.io/v1/namespaces/cloudacademy/buildconfigs/frontend/webhooks/supersecretgoeshere/github
 ```
 
-Within the ```openshift-voteapp-frontend-react``` Github repo - that you forked earlier (step 22.1), perform the following steps to configure a Webhook that will trigger an OpenShift build:
+Within your equivalent [openshift-voteapp-frontend-react](https://github.com/cloudacademy/openshift-voteapp-frontend-react) Github repo - that you forked earlier (step 22.1), perform the following steps to configure a Webhook that will trigger an automated OpenShift build whenever a push is performed to it:
 
 GitHub Webhook Setup Instructions:
 1. Under Settings->Webhooks, click the "Add Webhook" button
@@ -946,7 +965,7 @@ Confirm that the Webhook configuration has been successfully set
 
 Now perform an edit within the VoteApp codebase.
 
-For example update the VoteApp.js file - update the version number in the ```CloudAcademy ❤ DevOps 2019 v2.10.1``` string:
+For example update the [VoteApp.js](https://github.com/cloudacademy/openshift-voteapp-frontend-react/blob/master/src/components/VoteApp.js) file, remembering to do so within in your own equivalent forked repo - increment the version number in the ```CloudAcademy ❤ DevOps 2019 v2.10.1``` string:
 
 ```
 openshift-voteapp-frontend-react/src/components/VoteApp.js
@@ -1008,15 +1027,21 @@ Tail the new build
 oc logs -f build/BUILD_NAME
 ```
 
-Watch for the new automatic DeploymentConfig update triggered by the build
+When the build completes examine the latest image frontend container
+
+```
+oc describe is frontend
+```
+
+With the successful completion of the latest build for the frontend container image a new automatic DeploymentConfig update will be triggered and rolled out into the cluster. We can watch the status of the rollout
 
 ```
 oc rollout status deploymentconfig frontend
 oc get pods
+oc get pods -l role=frontend
 ```
 
-Confirm the complete end-to-end build and deploy process has worked by 
-refreshing the application within the browser!!
+Confirm the complete end-to-end build and deploy process has worked byvrefreshing the application within the browser and observing the latest edits just made!!
 
 Result!!
 
@@ -1024,8 +1049,12 @@ Result!!
 
 # STEP30
 
-When you've finished with the OpenShift cluster and no longer need it, consider tearing it down:
+When you've finished with the OpenShift cluster and no longer need it:
+
+Consider tearing it down:
 
 ```
 openshift-install destroy cluster
 ```
+
+Log back into the [cloud.redhat.com](https://cloud.redhat.com/openshift/install) portal and delete the respective cluster subscription
