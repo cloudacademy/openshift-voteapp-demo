@@ -541,11 +541,21 @@ oc get route
 Test the API route url - test the ```/ok```, ```/languages```, and ```/languages/{name}``` endpoints
 
 ```
-curl -s http://API_ROUTE_URL/ok
-curl -s http://API_ROUTE_URL/languages | jq .
-curl -s http://API_ROUTE_URL/languages/go | jq .
-curl -s http://API_ROUTE_URL/languages/java | jq .
-curl -s http://API_ROUTE_URL/languages/nodejs | jq .
+APIHOST=$(oc get route api -o jsonpath='{.spec.host}')
+echo $APIHOST
+```
+
+```
+curl -s $APIHOST/ok
+```
+
+Note: The following commands leverage the [jq](https://stedolan.github.io/jq/) utility to format the json data responses
+
+```
+curl -s $APIHOST/languages | jq .
+curl -s $APIHOST/languages/go | jq .
+curl -s $APIHOST/languages/java | jq .
+curl -s $APIHOST/languages/nodejs | jq .
 ```
 
 # STEP17:
