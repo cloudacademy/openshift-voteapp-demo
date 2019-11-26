@@ -141,16 +141,18 @@ Create the cluster
 Notes:
 1. Ensure to use the ```--log-level debug``` parameter to see the cluster provisioning activity - useful to detect errors and abort early
 2. The ```openshift-install``` command internally uses [Terraform](https://www.terraform.io/) to perform the actual AWS resource provisioning. Read the [Terraform](https://www.terraform.io/docs/providers/aws/index.html#authentication) documentation to determine how to establish AWS credentials so that Terraform can authenticate into your AWS account
-3. This takes between **20-30 minutes** to complete so sit back and relax, its major chill time :+1:
-4. Ensure that you run the ```openshift-install``` command in the same dir containing the ```install-config.yaml``` file
-5. Running the ```openshift-install``` command will result in additional AWS expenditure
-6. Make a copy of the ```install-config.yaml``` file if you want to preserve it *BEFORE* you execute the ```openshift-install create cluster``` - as it will be deleted during the cluster creation process
-7. Documentation for the configuration of this file can be found https://github.com/openshift/installer/blob/master/docs/user/customization.md
+3. Ensure that you run the ```openshift-install``` command in the same dir containing the ```install-config.yaml``` file
+4. Running the ```openshift-install``` command will result in additional AWS expenditure
+5. Make a copy of the ```install-config.yaml``` file if you want to preserve it *BEFORE* you execute the ```openshift-install create cluster``` - as it will be deleted during the cluster creation process
+6. Documentation for the configuration of this file can be found https://github.com/openshift/installer/blob/master/docs/user/customization.md
+
+Ok we're ready to launch the cluster...
 
 ```
 openshift-install create cluster --log-level debug
 ```
 
+This takes between **20-30 minutes** to complete so sit back and relax, its major chill time :+1:
 
 # STEP5:
 
