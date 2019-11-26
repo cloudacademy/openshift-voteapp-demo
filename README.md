@@ -145,6 +145,7 @@ Notes:
 4. Ensure that you run the ```openshift-install``` command in the same dir containing the ```install-config.yaml``` file
 5. Running the ```openshift-install``` command will result in additional AWS expenditure
 6. Make a copy of the ```install-config.yaml``` file if you want to preserve it *BEFORE* you execute the ```openshift-install create cluster``` - as it will be deleted during the cluster creation process
+7. Documentation for the configuration of this file can be found https://github.com/openshift/installer/blob/master/docs/user/customization.md
 
 ```
 openshift-install create cluster --log-level debug
