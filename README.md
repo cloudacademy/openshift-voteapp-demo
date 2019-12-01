@@ -936,19 +936,16 @@ Note: Use the Developer Tools within the Chrome browser to record, filter, and o
 
 Tail the Frontend and/or API pod logs
 
-Note: Incoming traffic to the pods are load balanced using a round-robin strategy - so when tailing the logs remember that incoming requests are evenly distrubuted over all of the pods grouped by the **role** label 
+Note: Incoming traffic to the pods are load balanced using a round-robin strategy - so when tailing individual pod logs remember that incoming requests are evenly distrubuted over all of the pods grouped by the **role** label 
 
 ```
-oc get pods
-oc get pods --field-selector=status.phase=Running
-oc logs FRONTEND_POD_NAME --tail 50 --follow
-oc logs API_POD_NAME --tail 50 --follow
+oc logs -l role=frontend --tail 50 --follow
+oc logs -l role=api --tail 50 --follow
 ```
 
 Check the updated vote count held within the Mongo database
 
 ```
-oc get pods
 oc get pods -l role=db
 oc rsh mongo-0 mongo langdb --eval "db.languages.find().pretty()"
 ```
