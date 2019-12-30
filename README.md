@@ -161,8 +161,8 @@ Open the web console and login
 * https://oauth-openshift.apps.openshift.democloudinc.com/oauth/token/display
 
 Notes:
-1. URL maybe different depending on the values used and configured within the ```install-config.yaml```
-2. The ```auth``` folder contains credentials for logging in
+1. Your URL will be different! This depends on the ```baseDomain``` value used and configured within the ```install-config.yaml```
+2. The newly created ```auth``` folder contains credentials for logging into the cluster
 
 # STEP6:
 
@@ -258,6 +258,8 @@ EOF
 ```
 
 # STEP10:
+
+![OpenShiftDeployment - StatefulSet](/docs/OpenShiftDeployment-StatefulSet.png)
 
 Create a new StorageClass named ```ebs```
 
@@ -450,6 +452,8 @@ oc rsh mongo-0 mongo langdb --eval "db.languages.find().pretty()"
 
 # STEP15:
 
+![OpenShiftDeployment - API](/docs/OpenShiftDeployment-API.png)
+
 Deploy the API using:
 
 ```
@@ -563,6 +567,8 @@ curl -s $APIHOST/languages/nodejs | jq .
 ```
 
 # STEP17:
+
+![OpenShiftDeployment](/docs/OpenShiftDeployment-Build.png)
 
 Install and setup the S2I executable
 
@@ -783,6 +789,8 @@ oc logs -f build/BUILD_NAME --tail=50
 ```
 
 # STEP25:
+
+![OpenShiftDeployment](/docs/OpenShiftDeployment-Frontend.png)
 
 Create a new frontend DeploymentConfig
 
