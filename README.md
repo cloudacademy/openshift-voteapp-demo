@@ -948,11 +948,11 @@ Note: Use the Developer Tools within the Chrome browser to record, filter, and o
 
 Tail the Frontend and/or API pod logs
 
-Note: Incoming traffic to the pods are load balanced using a round-robin strategy - so when tailing individual pod logs remember that incoming requests are evenly distrubuted over all of the pods grouped by the **role** label 
+Note: Incoming traffic to the pods are load balanced using a round-robin strategy
 
 ```
 oc logs dc/frontend --tail 50 --follow
-oc logs dc/api --tail 50 --follow
+oc logs deploy/api --tail 50 --follow
 ```
 
 Check the updated vote count held within the Mongo database
