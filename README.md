@@ -42,7 +42,7 @@ Download the ```openshift-install``` installer and setup
 https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/
 
 ```
-curl -O https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/openshift-install-mac-4.2.12.tar.gz
+curl -O https://mirror.openshift.com/pub/openshift-v4/clients/ocp/4.2.12/openshift-install-mac-4.2.12.tar.gz
 tar -xvf openshift-install-mac-4.2.12.tar.gz
 cp openshift-install /usr/local/bin/
 which openshift-install
@@ -174,7 +174,7 @@ Notes:
 Install the ```oc``` command:
 
 ```
-curl -O https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/openshift-client-mac-4.2.12.tar.gz
+curl -O https://mirror.openshift.com/pub/openshift-v4/clients/ocp/4.2.12/openshift-client-mac-4.2.12.tar.gz
 tar -xvf openshift-client-mac-4.2.12.tar.gz
 cp oc /usr/local/bin/
 which oc
