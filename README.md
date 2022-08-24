@@ -125,7 +125,8 @@ networking:
   clusterNetwork:
   - cidr: 10.128.0.0/14
     hostPrefix: 23
-  machineCIDR: 192.168.0.0/20
+  machineNetwork:
+  - cidr: 192.168.0.0/20
   networkType: OpenShiftSDN
   serviceNetwork:
   - 172.30.0.0/16
@@ -136,6 +137,7 @@ platform:
       adminContact: Jeremy
       costCenter: 123
       email: jeremy.cook@cloudacademy.com
+publish: External
 pullSecret: ''
 sshKey: 
 EOF
