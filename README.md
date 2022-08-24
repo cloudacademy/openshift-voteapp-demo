@@ -2,7 +2,10 @@
 
 The following instructions are used to demonstrate how to provision an OpenShift 4 cluster on AWS, and then to deploy a cloud native application into it, complete with automated container builds and deployments for the win!
 
-:metal: 
+:metal:
+
+### Updates
+* **24/08/2022**: Updated instructions to work with the latest version of OpenShift (v4.11)
 
 The cloud native application is architected using microservices and is presented to the user as a web application. The application frontend provides the end-user with the ability to vote on one of 3 programming languages: Go, Java, and/or NodeJS. Voting results in AJAX calls being made from the browser to an API which in turn then saves the results into a MongoDB database.
 
@@ -42,8 +45,8 @@ Download the ```openshift-install``` installer and setup
 https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/
 
 ```
-curl -O https://mirror.openshift.com/pub/openshift-v4/clients/ocp/4.2.12/openshift-install-mac-4.2.12.tar.gz
-tar -xvf openshift-install-mac-4.2.12.tar.gz
+curl -O https://mirror.openshift.com/pub/openshift-v4/clients/ocp/4.11.0/openshift-install-mac-4.11.0.tar.gz
+tar -xvf openshift-install-mac-4.11.0.tar.gz
 cp openshift-install /usr/local/bin/
 which openshift-install
 ```
@@ -53,7 +56,7 @@ openshift-install
 openshift-install version
 ```
 
-Note: This script downloads version **4.2.12** of the openshift installer client - a newer version may now exist.
+Note: This script downloads version **4.11.0** of the openshift installer client - a newer version may now exist.
 
 # STEP3:
 
@@ -174,13 +177,13 @@ Notes:
 Install the ```oc``` command:
 
 ```
-curl -O https://mirror.openshift.com/pub/openshift-v4/clients/ocp/4.2.12/openshift-client-mac-4.2.12.tar.gz
-tar -xvf openshift-client-mac-4.2.12.tar.gz
+curl -O https://mirror.openshift.com/pub/openshift-v4/clients/ocp/4.11.0/openshift-client-mac-4.11.0.tar.gz
+tar -xvf openshift-client-mac-4.11.0.tar.gz
 cp oc /usr/local/bin/
 which oc
 ```
 
-Note: This script downloads version **4.2.12** of the openshift oc client - a newer version may now exist.
+Note: This script downloads version **4.11.0** of the openshift oc client - a newer version may now exist.
 
 ```
 oc
@@ -297,7 +300,7 @@ Create a new Mongo StatefulSet name ```mongo```
 
 ```
 cat <<EOF | oc create -f -
-apiVersion: apps/v1beta1
+apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: mongo
@@ -305,6 +308,11 @@ metadata:
 spec:
   serviceName: mongo
   replicas: 3
+  selector:
+    matchLabels:
+      role: db
+      env: demo
+      replicaset: rs0.main
   template:
     metadata:
       labels:
@@ -327,7 +335,7 @@ spec:
       terminationGracePeriodSeconds: 10
       containers:
         - name: mongo
-          image: mongo
+          image: mongo:4.2
           command:
             - "numactl"
             - "--interleave=all"
@@ -582,8 +590,8 @@ Install and setup the S2I executable
 https://github.com/openshift/source-to-image/releases/
 
 ```
-curl -O --location https://github.com/openshift/source-to-image/releases/download/v1.2.0/source-to-image-v1.2.0-2a579ecd-darwin-amd64.tar.gz
-tar -xvf source-to-image-v1.2.0-2a579ecd-darwin-amd64.tar.gz
+https://github.com/openshift/source-to-image/releases/download/v1.3.1/source-to-image-v1.3.1-a5a77147-darwin-amd64.tar.gz
+tar -xvf source-to-image-v1.3.1-a5a77147-darwin-amd64.tar.gz
 cp s2i /usr/local/bin/
 which s2i
 ```
@@ -691,10 +699,10 @@ Browse to the application and ensure that the ```REACT_APP_APIHOSTPORT``` enviro
 
 # STEP21:
 
-Upload the S2I Frontend builder image into the ```cloudacademydevops``` DockerHub repo
+Upload the S2I Frontend builder image into a DockerHub repo managed by yourself. In the instructions that follow, the [cloudacademydevops](https://hub.docker.com/r/cloudacademydevops/frontendbuilder/tags) DockerHub repo is used.
 
 Note:
-1. Consider using your own DockerHub repo
+1. You must use your own DockerHub repo - you will not have permissions to push into the [cloudacademydevops](https://hub.docker.com/r/cloudacademydevops/frontendbuilder/tags) repo.
 
 ```
 docker login
